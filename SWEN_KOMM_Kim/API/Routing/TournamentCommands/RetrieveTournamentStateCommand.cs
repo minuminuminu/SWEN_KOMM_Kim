@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 {
-    internal class RetrieveHistoryCommand : IRouteCommand
+    internal class RetrieveTournamentStateCommand : IRouteCommand
     {
         private readonly ITournamentManager _tournamentManager;
         private readonly User _user;
 
-        public RetrieveHistoryCommand(ITournamentManager tournamentManager, User user)
+        public RetrieveTournamentStateCommand(ITournamentManager tournamentManager, User user)
         {
             _tournamentManager = tournamentManager;
             _user = user;
@@ -29,8 +29,10 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 
             try
             {
-                List<TournamentEntry> entries = _tournamentManager.GetUserHistory(_user.Token);
-                var jsonPayload = JsonConvert.SerializeObject(entries);
+                TournamentState tournamentState = _tournamentManager.GetTournamentStateByAuthToken(_user.Token);
+                //List<string> test = new List<string> { "admin-sebToken", "kienboec-sebToken" };
+                //TournamentState tournamentState = new TournamentState(3, test, DateTime.Now);
+                var jsonPayload = JsonConvert.SerializeObject(tournamentState);
                 response = new HttpResponse(StatusCode.Ok, jsonPayload);
             }
             catch (NoContentException)

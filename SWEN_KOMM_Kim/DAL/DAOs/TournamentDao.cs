@@ -118,15 +118,34 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
             return null;
         }
 
+        public bool InsertEntryInMemoryDB(TournamentEntry entry, string tournamentName)
+        {
+            _tournaments[tournamentName].Entries.Add(entry);
 
-        //public bool InsertEntryInMemoryDB(TournamentEntry entry, string tournamentName)
-        //{
+            return true;
+        }
 
-        //}
+        public bool InsertTournamentInMemoryDB(Tournament tournament, string tournamentName)
+        {
+            _tournaments.Add(tournamentName, tournament);
 
-        //public bool InsertTournamentInMemoryDB(Tournament tournament, string tournamentName)
-        //{
+            return true;
+        }
 
-        //}
+        public bool RemoveTournamentFromMemoryDB(string tournamentName)
+        {
+            _tournaments.Remove(tournamentName);
+            return true;
+        }
+
+        public bool DoesTournamentExist(string tournamentName)
+        {
+            if (_tournaments.ContainsKey(tournamentName))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

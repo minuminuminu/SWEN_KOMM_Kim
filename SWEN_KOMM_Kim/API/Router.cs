@@ -54,7 +54,9 @@ namespace SWEN_KOMM_Kim.API
                     { Method: HttpMethod.Get, ResourcePath: "/score" } => new RetrieveScoreboardCommand(_statsManager, GetIdentity(request)),
 
                     { Method: HttpMethod.Get, ResourcePath: "/history" } => new RetrieveHistoryCommand(_tournamentManager, GetIdentity(request)),
-                    
+                    { Method: HttpMethod.Get, ResourcePath: "/tournament" } => new RetrieveTournamentStateCommand(_tournamentManager, GetIdentity(request)),
+                    { Method: HttpMethod.Post, ResourcePath: "/history" } => new AddHistoryEntryCommand(_tournamentManager, GetIdentity(request), Deserialize<PayloadEntry>(request.Payload)),
+
                     _ => null
                 };
             }

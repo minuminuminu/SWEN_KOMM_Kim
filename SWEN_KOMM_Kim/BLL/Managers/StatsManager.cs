@@ -24,6 +24,16 @@ namespace SWEN_KOMM_Kim.BLL.Managers
             _statsDao.CreateUserStatsEntry(authToken);
         }
 
+        public void IncreaseStats(int elo, int pushups, string authToken)
+        {
+            _statsDao.IncreaseStats(elo, pushups, authToken);
+        }
+
+        public void DecreaseStats(int pushups, string authToken)
+        {
+            _statsDao.DecreaseStats(pushups, authToken);
+        }
+
         public UserStats RetrieveUserStats(string authToken)
         {
             var stats = _statsDao.RetrieveUserStats(authToken);
@@ -38,7 +48,10 @@ namespace SWEN_KOMM_Kim.BLL.Managers
 
         public List<UserStats> RetrieveScoreboard()
         {
-            return _statsDao.RetrieveScoreboard();
+            List<UserStats> scoreboard = _statsDao.RetrieveScoreboard();
+            List<UserStats> sortedScoreboard = scoreboard.OrderByDescending(e => e.Elo).ToList();
+
+            return sortedScoreboard;
         }
     }
 }

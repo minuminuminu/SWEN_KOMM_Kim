@@ -10,15 +10,13 @@ namespace SWEN_KOMM_Kim.Models
     {
         public string Name { get; set; }
         public int Elo {  get; set; }
-        public int Wins { get; set; }
-        public int Losses { get; set; }
+        public int Pushups { get; set; }
 
-        public UserStats(string name, int elo, int wins, int losses)
+        public UserStats(string name, int elo, int pushups)
         {
             Name = name;
             Elo = elo;
-            Wins = wins;
-            Losses = losses;
+            Pushups = pushups;
         }
     }
 }

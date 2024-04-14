@@ -10,5 +10,7 @@ namespace SWEN_KOMM_Kim.BLL.Interfaces
     internal interface ITournamentManager
     {
         List<TournamentEntry> GetUserHistory(string authToken);
+        TournamentState GetTournamentStateByAuthToken(string authToken);
+        void HandleTournamentEntry(TournamentEntry entry, string tournamentName);
     }
 }

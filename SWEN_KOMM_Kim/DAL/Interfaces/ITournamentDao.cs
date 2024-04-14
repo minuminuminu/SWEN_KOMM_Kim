@@ -13,5 +13,10 @@ namespace SWEN_KOMM_Kim.DAL.Interfaces
         bool IsUserInTournament(string authToken);
         string? GetTournamentNameByAuthToken(string authToken);
         Tournament? GetTournamentByName(string tournamentName);
+        bool InsertHistoryEntry(TournamentEntry entry);
+        bool InsertEntryInMemoryDB(TournamentEntry entry, string tournamentName);
+        bool InsertTournamentInMemoryDB(Tournament tournament, string tournamentName);
+        bool RemoveTournamentFromMemoryDB(string tournamentName);
+        bool DoesTournamentExist(string tournamentName);
     }
 }

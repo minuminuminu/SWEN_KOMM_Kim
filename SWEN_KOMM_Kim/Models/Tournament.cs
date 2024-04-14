@@ -9,14 +9,12 @@ namespace SWEN_KOMM_Kim.Models
     internal class Tournament
     {
         public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
         public List<TournamentEntry> Entries { get; set; }
 
         public Tournament()
         {
             Entries = new List<TournamentEntry>();
             StartTime = DateTime.Now;
-            EndTime = StartTime.AddSeconds(10);
         }
     }
 }

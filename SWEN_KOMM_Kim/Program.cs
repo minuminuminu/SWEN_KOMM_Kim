@@ -20,7 +20,7 @@ namespace SWEN_KOMM_Kim
 
             IUserManager userManager = new UserManager(userDao);
             IStatsManager statsManager = new StatsManager(statsDao);
-            ITournamentManager tournamentManager = new TournamentManager(tournamentDao);
+            ITournamentManager tournamentManager = new TournamentManager(tournamentDao, statsManager);
 
             var router = new Router(userManager, statsManager, tournamentManager);
             var server = new HttpServer.HttpServer(router, IPAddress.Any, 10001);
