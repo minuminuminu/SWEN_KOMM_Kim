@@ -100,7 +100,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                string name = reader.IsDBNull(reader.GetOrdinal("name")) ? "" : reader.GetString(reader.GetOrdinal("name"));
+                string name = reader.IsDBNull(reader.GetOrdinal("name")) ? "Unknown" : reader.GetString(reader.GetOrdinal("name"));
                 string bio = reader.IsDBNull(reader.GetOrdinal("bio")) ? "" : reader.GetString(reader.GetOrdinal("bio"));
                 string image = reader.IsDBNull(reader.GetOrdinal("image")) ? "" : reader.GetString(reader.GetOrdinal("image"));
 

@@ -82,7 +82,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                string name = reader.GetString(reader.GetOrdinal("name"));
+                string name = reader.IsDBNull(reader.GetOrdinal("name")) ? "Unknown" : reader.GetString(reader.GetOrdinal("name"));
                 int elo = reader.GetInt32(reader.GetOrdinal("elo"));
                 int pushups = reader.GetInt32(reader.GetOrdinal("pushups"));
 
@@ -104,7 +104,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                string name = reader.GetString(reader.GetOrdinal("name"));
+                string name = reader.IsDBNull(reader.GetOrdinal("name")) ? "Unknown" : reader.GetString(reader.GetOrdinal("name"));
                 int elo = reader.GetInt32(reader.GetOrdinal("elo"));
                 int pushups = reader.GetInt32(reader.GetOrdinal("pushups"));
 

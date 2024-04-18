@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace SWEN_KOMM_Kim.DAL.DAOs
 {
     internal class TournamentDao : ITournamentDao
     {
-        private readonly Dictionary<string, Tournament> _tournaments = new Dictionary<string, Tournament>();
+        private readonly ConcurrentDictionary<string, Tournament> _tournaments = new ConcurrentDictionary<string, Tournament>();
 
         private readonly string CreateHistoryTableCommand = @"CREATE TABLE IF NOT EXISTS history (id SERIAL PRIMARY KEY, count int, duration int, authToken varchar references users(authToken) ON UPDATE CASCADE)";
 
@@ -110,33 +111,30 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
 
         public Tournament? GetTournamentByName(string tournamentName)
         {
-            if (_tournaments.ContainsKey(tournamentName))
-            {
-                return _tournaments[tournamentName]; 
-            }
-
-            return null;
+            _tournaments.TryGetValue(tournamentName, out Tournament tournament);
+            return tournament;
         }
 
         public bool InsertEntryInMemoryDB(TournamentEntry entry, string tournamentName)
         {
-            _tournaments[tournamentName].Entries.Add(entry);
-
-            return true;
+            if (_tournaments.TryGetValue(tournamentName, out Tournament tournament))
+            {
+                tournament.Entries.Add(entry);
+                return true;
+            }
+            return false;
         }
 
         public bool InsertTournamentInMemoryDB(Tournament tournament, string tournamentName)
         {
-            _tournaments.Add(tournamentName, tournament);
-
-            return true;
+            return _tournaments.TryAdd(tournamentName, tournament);
         }
 
         public bool RemoveTournamentFromMemoryDB(string tournamentName)
         {
-            _tournaments.Remove(tournamentName);
-            return true;
-        }
+            return _tournaments.TryRemove(tournamentName, out _);
+        } // discard "_" -> normalerweise 2. param outputted das element, das entfernt wurde
+        // "out _" -> sagt, dass uns das hierbei egal ist, nur die operation muss erfolgen
 
         public bool DoesTournamentExist(string tournamentName)
         {

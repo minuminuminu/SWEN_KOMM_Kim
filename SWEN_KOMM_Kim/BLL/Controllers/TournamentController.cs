@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace SWEN_KOMM_Kim.BLL.Controllers
 {
@@ -15,7 +16,7 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
         private readonly ITournamentDao _tournamentDao;
         private readonly IStatsController _statsController;
 
-        private readonly Dictionary<string, Timer> tournamentTimers = new Dictionary<string, Timer>();
+        private readonly ConcurrentDictionary<string, Timer> tournamentTimers = new ConcurrentDictionary<string, Timer>();
 
         public TournamentController(ITournamentDao tournamentDao, IStatsController statsController)
         {
@@ -114,10 +115,10 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
                 _tournamentDao.InsertHistoryEntry(entry);
 
                 // start timer
-                //int tournamentDurationInMilliseconds = 2 * 60 * 1000;
-                //Timer timer = new Timer(TournamentTimerElapsed, tournamentName, tournamentDurationInMilliseconds, Timeout.Infinite);
-                Timer timer = new Timer(TournamentFinishedCallback, tournamentName, 10000, Timeout.Infinite);
-                tournamentTimers.Add(tournamentName, timer);
+                //int tournamentDurationInMilliseconds = 2 * 60 * 1000; // 2 minuten
+                int tournamentDurationInMilliseconds = 10 * 1000; // 10 secs
+                Timer timer = new Timer(TournamentFinishedCallback, tournamentName, tournamentDurationInMilliseconds, Timeout.Infinite);
+                tournamentTimers.TryAdd(tournamentName, timer);
 
                 Console.WriteLine($"Tournament '{tournamentName}' has started.\n");
             }
@@ -174,7 +175,7 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
             // remove tournament from db and timer clean up
             _tournamentDao.RemoveTournamentFromMemoryDB(tournamentName);
             tournamentTimers[tournamentName].Dispose();
-            tournamentTimers.Remove(tournamentName);
+            tournamentTimers.TryRemove(tournamentName, out _);
 
             Console.WriteLine($"\nTournament '{tournamentName}' has ended.\n");
         }
