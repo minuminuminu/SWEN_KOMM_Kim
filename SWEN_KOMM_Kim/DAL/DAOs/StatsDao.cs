@@ -11,7 +11,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
 {
     internal class StatsDao : IStatsDao
     {
-        private const string CreateUserStatsTableCommand = @"CREATE TABLE IF NOT EXISTS user_stats (elo int DEFAULT 100, pushups int DEFAULT 0, authToken varchar REFERENCES users(authToken));";
+        private const string CreateUserStatsTableCommand = @"CREATE TABLE IF NOT EXISTS user_stats (elo int DEFAULT 100, pushups int DEFAULT 0, authToken varchar REFERENCES users(authToken) ON UPDATE CASCADE);";
 
         private const string SelectAllStatsEntriesCommand = @"SELECT ud.name, us.elo, us.pushups FROM user_stats us INNER JOIN user_data ud ON us.authToken = ud.authToken";
         private const string SelectUserStatsEntryCommand = @"SELECT ud.name, us.elo, us.pushups FROM user_stats us INNER JOIN user_data ud ON us.authToken = ud.authToken WHERE ud.authToken=@authToken ORDER BY us.elo DESC";

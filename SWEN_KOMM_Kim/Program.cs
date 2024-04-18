@@ -12,7 +12,7 @@ namespace SWEN_KOMM_Kim
     {
         static void Main(string[] args)
         {
-            var connectionString = "Host=localhost;Username=minu_seb;Password=minuminuminu;Database=mydb";
+            var connectionString = "Host=localhost;Username=minu_seb;Password=minuminuminu;Database=db_seb";
 
             IUserDao userDao = new UserDao(connectionString);
             IStatsDao statsDao = new StatsDao(connectionString);

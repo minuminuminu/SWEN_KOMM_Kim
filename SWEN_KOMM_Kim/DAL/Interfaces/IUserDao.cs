@@ -16,5 +16,6 @@ namespace SWEN_KOMM_Kim.DAL.Interfaces
         bool InsertNewUserData(string authToken);
         bool UpdateUserData(UserData userData, string authToken);
         UserData? GetUserData(string authToken);
+        bool UpdateUserCredentials(User user, string username);
     }
 }

@@ -37,8 +37,8 @@ namespace SWEN_KOMM_Kim.API
 
         public IRouteCommand? Resolve(HttpRequest request)
         {
-            var isMatch = (string path) => _routeParser.IsMatch(path, "/users/{id}");
-            var parseId = (string path) => _routeParser.ParseParameters(path, "/users/{id}")["id"];
+            var isMatch = (string path, string route) => _routeParser.IsMatch(path, "/" + route + "/{id}");
+            var parseId = (string path, string route) => _routeParser.ParseParameters(path, "/" + route + "/{id}")["id"];
             var checkBody = (string? payload) => payload ?? throw new InvalidDataException();
 
             try
@@ -47,8 +47,8 @@ namespace SWEN_KOMM_Kim.API
                 {
                     { Method: HttpMethod.Post, ResourcePath: "/users" } => new RegisterCommand(_userManager, _statsManager, Deserialize<Credentials>(request.Payload)),
                     { Method: HttpMethod.Post, ResourcePath: "/sessions" } => new LoginCommand(_userManager, Deserialize<Credentials>(request.Payload)),
-                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path) => new UpdateUserDataCommand(_userManager, parseId(path), GetIdentity(request), Deserialize<UserData>(request.Payload)),
-                    { Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path) => new RetrieveUserDataCommand(_userManager, parseId(path), GetIdentity(request)),
+                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "users") => new UpdateUserDataCommand(_userManager, parseId(path, "users"), GetIdentity(request), Deserialize<UserData>(request.Payload)),
+                    { Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path, "users") => new RetrieveUserDataCommand(_userManager, parseId(path, "users"), GetIdentity(request)),
 
                     { Method: HttpMethod.Get, ResourcePath: "/stats" } => new RetrieveUserStatsCommand(GetIdentity(request), _statsManager),
                     { Method: HttpMethod.Get, ResourcePath: "/score" } => new RetrieveScoreboardCommand(_statsManager, GetIdentity(request)),
@@ -56,6 +56,9 @@ namespace SWEN_KOMM_Kim.API
                     { Method: HttpMethod.Get, ResourcePath: "/history" } => new RetrieveHistoryCommand(_tournamentManager, GetIdentity(request)),
                     { Method: HttpMethod.Get, ResourcePath: "/tournament" } => new RetrieveTournamentStateCommand(_tournamentManager, GetIdentity(request)),
                     { Method: HttpMethod.Post, ResourcePath: "/history" } => new AddHistoryEntryCommand(_tournamentManager, GetIdentity(request), Deserialize<PayloadEntry>(request.Payload)),
+
+                    // unique feature
+                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "edit") => new UpdateUserCredentialsCommand(_userManager, Deserialize<User>(request.Payload), GetIdentity(request), parseId(path, "edit")),
 
                     _ => null
                 };

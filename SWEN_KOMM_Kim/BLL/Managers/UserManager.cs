@@ -41,10 +41,28 @@ namespace SWEN_KOMM_Kim.BLL.Managers
 
             try
             {
-                _userDao.InsertUser(user); // users table
+                if(!_userDao.InsertUser(user))
+                {
+                    throw new DuplicateUserException();
+                }
                 _userDao.InsertNewUserData(user.Token); // user data table
             } 
             catch(PostgresException ex) when (ex.SqlState == "23505") // duplicate pkey violation error code
+            {
+                throw new DuplicateUserException();
+            }
+        }
+
+        public void UpdateUserCredentials(User user, string username)
+        {
+            try
+            {
+                if (!_userDao.UpdateUserCredentials(user, username))
+                {
+                    throw new DuplicateUserException();
+                }
+            }
+            catch (PostgresException ex) when (ex.SqlState == "23505")
             {
                 throw new DuplicateUserException();
             }

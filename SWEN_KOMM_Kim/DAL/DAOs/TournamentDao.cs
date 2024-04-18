@@ -13,7 +13,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
     {
         private readonly Dictionary<string, Tournament> _tournaments = new Dictionary<string, Tournament>();
 
-        private readonly string CreateHistoryTableCommand = @"CREATE TABLE IF NOT EXISTS history (id SERIAL PRIMARY KEY, count int, duration int, authToken varchar references users(authToken))";
+        private readonly string CreateHistoryTableCommand = @"CREATE TABLE IF NOT EXISTS history (id SERIAL PRIMARY KEY, count int, duration int, authToken varchar references users(authToken) ON UPDATE CASCADE)";
 
         private readonly string SelectAllEntriesByAuthTokenCommand = @"SELECT * FROM history WHERE authToken=@authToken";
 

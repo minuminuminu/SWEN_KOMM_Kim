@@ -13,7 +13,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
     internal class UserDao : IUserDao
     {
         private const string CreateUserTableCommand = @"CREATE TABLE IF NOT EXISTS users (username varchar PRIMARY KEY, password varchar, authToken varchar UNIQUE);";
-        private const string CreateUserDataTableCommand = @"CREATE TABLE IF NOT EXISTS user_data (name varchar DEFAULT NULL, bio varchar DEFAULT NULL, image varchar DEFAULT NULL, authToken varchar REFERENCES users(authToken))";
+        private const string CreateUserDataTableCommand = @"CREATE TABLE IF NOT EXISTS user_data (name varchar DEFAULT NULL, bio varchar DEFAULT NULL, image varchar DEFAULT NULL, authToken varchar REFERENCES users(authToken) ON UPDATE CASCADE)";
 
         private const string SelectAllUsersCommand = @"SELECT * FROM users";
         private const string SelectUserByCredentialsCommand = "SELECT * FROM users WHERE username=@username AND password=@password";
@@ -23,6 +23,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
         private const string InsertDefaultUserDataCommand = @"INSERT INTO user_data(authToken) VALUES (@authToken)";
 
         private const string UpdateUserDataCommand = @"UPDATE user_data SET name=@name, bio=@bio, image=@image WHERE authToken=@authToken";
+        private const string UpdateUserCredentialsCommand = @"UPDATE users SET username=@new_username, password=@password, authToken=@authToken WHERE username=@current_username";
 
         private readonly string _connectionString;
 
@@ -53,6 +54,22 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
             cmd.Parameters.AddWithValue("username", user.Username);
             cmd.Parameters.AddWithValue("password", user.Password);
             cmd.Parameters.AddWithValue("authToken", user.Token);
+            var affectedRows = cmd.ExecuteNonQuery();
+
+            return affectedRows > 0;
+        }
+
+        public bool UpdateUserCredentials(User user, string username)
+        {
+            using var connection = new NpgsqlConnection(_connectionString);
+            connection.Open();
+
+            using var cmd = new NpgsqlCommand(UpdateUserCredentialsCommand, connection);
+            cmd.Parameters.AddWithValue("new_username", user.Username);
+            cmd.Parameters.AddWithValue("password", user.Password);
+            cmd.Parameters.AddWithValue("authToken", user.Token);
+            cmd.Parameters.AddWithValue("current_username", username);
+
             var affectedRows = cmd.ExecuteNonQuery();
 
             return affectedRows > 0;

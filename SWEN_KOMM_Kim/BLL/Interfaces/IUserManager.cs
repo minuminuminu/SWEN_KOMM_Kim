@@ -16,5 +16,6 @@ namespace SWEN_KOMM_Kim.BLL.Interfaces
         User GetUserByUsername(string username);
         UserData GetUserData(string authToken);
         void UpdateUserData(UserData userData, string authToken);
+        void UpdateUserCredentials(User user, string username);
     }
 }
