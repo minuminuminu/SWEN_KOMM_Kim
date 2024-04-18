@@ -109,7 +109,7 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
             {
                 Tournament tournament = new();
                 tournament.Entries.Add(entry);
-                tournament.StartTime = DateTime.Now;
+                // tournament.StartTime = DateTime.Now;
 
                 _tournamentDao.InsertTournamentInMemoryDB(tournament, tournamentName);
                 _tournamentDao.InsertHistoryEntry(entry);
