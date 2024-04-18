@@ -114,8 +114,8 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
                 _tournamentDao.InsertHistoryEntry(entry);
 
                 // start timer
-                //int tournamentDurationInMilliseconds = 2 * 60 * 1000; // 2 minuten
-                int tournamentDurationInMilliseconds = 10 * 1000; // 10 secs
+                int tournamentDurationInMilliseconds = 2 * 60 * 1000; // 2 minuten
+                // int tournamentDurationInMilliseconds = 10 * 1000; // 10 secs
                 Timer timer = new Timer(TournamentFinishedCallback, tournamentName, tournamentDurationInMilliseconds, Timeout.Infinite);
                 tournamentTimers.TryAdd(tournamentName, timer);
 
