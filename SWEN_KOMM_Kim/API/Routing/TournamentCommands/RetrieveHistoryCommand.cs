@@ -29,7 +29,7 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 
             try
             {
-                List<TournamentEntry> entries = _tournamentController.GetUserHistory(_user.Token);
+                List<TournamentEntry> entries = _tournamentController.GetUserHistory(_user.Username);
                 var jsonPayload = JsonConvert.SerializeObject(entries);
                 response = new HttpResponse(StatusCode.Ok, jsonPayload);
             }

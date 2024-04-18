@@ -27,17 +27,17 @@ namespace SWEN_KOMM_Kim.Test
         [Test]
         public void GetUserHistory_NoContentExceptionThrown()
         {
-            _mockTournamentDao.Setup(x => x.GetUserHistory("invalid-token")).Returns(new List<TournamentEntry>());
+            _mockTournamentDao.Setup(x => x.GetUserHistory("invalid-username")).Returns(new List<TournamentEntry>());
 
-            Assert.Throws<NoContentException>(() => _tournamentController.GetUserHistory("invalid-token"));
+            Assert.Throws<NoContentException>(() => _tournamentController.GetUserHistory("invalid-username"));
         }
 
         [Test]
-        public void GetTournamentStateByAuthToken_NoContentExceptionThrown()
+        public void GetTournamentStateByUsername_NoContentExceptionThrown()
         {
-            _mockTournamentDao.Setup(x => x.IsUserInTournament("invalid-token")).Returns(false);
+            _mockTournamentDao.Setup(x => x.IsUserInTournament("invalid-username")).Returns(false);
 
-            Assert.Throws<NoContentException>(() => _tournamentController.GetTournamentStateByAuthToken("invalid-token"));
+            Assert.Throws<NoContentException>(() => _tournamentController.GetTournamentStateByUsername("invalid-username"));
         }
     }
 }

@@ -9,13 +9,13 @@ namespace SWEN_KOMM_Kim.Models
     internal class TournamentState
     {
         public int ParticipantCount { get; set; }
-        public List<string> LeadingParticipantsAuthToken { get; set; }
+        public List<string> LeadingParticipants { get; set; }
         public DateTime StartTime { get; set; }
 
         public TournamentState(int participantCount, List<string> leadingUsers, DateTime startTime)
         {
             ParticipantCount = participantCount;
-            LeadingParticipantsAuthToken = leadingUsers;
+            LeadingParticipants = leadingUsers;
             StartTime = startTime;
         }
     }

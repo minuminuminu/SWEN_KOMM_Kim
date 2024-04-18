@@ -24,9 +24,9 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
             _statsController = statsController;
         }
 
-        public List<TournamentEntry> GetUserHistory(string authToken)
+        public List<TournamentEntry> GetUserHistory(string username)
         {
-            List<TournamentEntry> entries = _tournamentDao.GetUserHistory(authToken);
+            List<TournamentEntry> entries = _tournamentDao.GetUserHistory(username);
 
             if(entries.Count == 0)
             {
@@ -42,14 +42,14 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
 
             foreach (var entry in tournament.Entries)
             {
-                if (summarizedEntries.ContainsKey(entry.AuthToken))
+                if (summarizedEntries.ContainsKey(entry.Username))
                 {
-                    summarizedEntries[entry.AuthToken].Count += entry.Count;
-                    summarizedEntries[entry.AuthToken].Duration += entry.Duration;
+                    summarizedEntries[entry.Username].Count += entry.Count;
+                    summarizedEntries[entry.Username].Duration += entry.Duration;
                 }
                 else
                 {
-                    summarizedEntries[entry.AuthToken] = new TournamentEntry(entry.Count, entry.Duration, entry.AuthToken);
+                    summarizedEntries[entry.Username] = new TournamentEntry(entry.Count, entry.Duration, entry.Username);
                 }
             }
 
@@ -73,27 +73,27 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
             {
                 if (entry.Count == highestCount)
                 {
-                    usersWithHighestCount.Add(entry.AuthToken);
+                    usersWithHighestCount.Add(entry.Username);
                 }
             }
 
             return usersWithHighestCount;
         }
 
-        public TournamentState GetTournamentStateByAuthToken(string authToken)
+        public TournamentState GetTournamentStateByUsername(string username)
         {
-            if (!_tournamentDao.IsUserInTournament(authToken))
+            if (!_tournamentDao.IsUserInTournament(username))
             {
                 throw new NoContentException();
             }
 
-            var tournamentName = _tournamentDao.GetTournamentNameByAuthToken(authToken);
+            var tournamentName = _tournamentDao.GetTournamentNameByUsername(username);
             var tournament = _tournamentDao.GetTournamentByName(tournamentName);
 
             List<TournamentEntry> summarizedEntries = SummarizeEntries(tournament);
-            List<string> leadingUsersAuthToken = GetUsersWithHighestCount(summarizedEntries);
+            List<string> leadingUsers = GetUsersWithHighestCount(summarizedEntries);
 
-            TournamentState tournamentState = new TournamentState(summarizedEntries.Count, leadingUsersAuthToken, tournament.StartTime);
+            TournamentState tournamentState = new TournamentState(summarizedEntries.Count, leadingUsers, tournament.StartTime);
             
             return tournamentState;
         }
@@ -109,7 +109,6 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
             {
                 Tournament tournament = new();
                 tournament.Entries.Add(entry);
-                // tournament.StartTime = DateTime.Now;
 
                 _tournamentDao.InsertTournamentInMemoryDB(tournament, tournamentName);
                 _tournamentDao.InsertHistoryEntry(entry);
@@ -152,24 +151,24 @@ namespace SWEN_KOMM_Kim.BLL.Controllers
 
             if(winners.Count == 1)
             {
-                _statsController.IncreaseStats(2, winners.First().Count, winners.First().AuthToken);
+                _statsController.IncreaseStats(2, winners.First().Count, winners.First().Username + "-sebToken");
             }
             else
             {
                 foreach (var winner in winners)
                 {
-                    _statsController.IncreaseStats(1, winner.Count, winner.AuthToken);
+                    _statsController.IncreaseStats(1, winner.Count, winner.Username + "-sebToken");
                 }
             }
 
             foreach (var participant in otherParticipants)
             {
-                _statsController.DecreaseStats(participant.Count, participant.AuthToken);
+                _statsController.DecreaseStats(participant.Count, participant.Username + "-sebToken");
             }
 
             foreach (var entry in sortedEntries)
             {
-                Console.WriteLine($"User '{entry.AuthToken}' has count '{entry.Count}' and duration '{entry.Duration}'.");
+                Console.WriteLine($"User '{entry.Username}' has count '{entry.Count}' and duration '{entry.Duration}'.");
             }
 
             // remove tournament from db and timer clean up

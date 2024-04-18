@@ -27,7 +27,7 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
         {
             HttpResponse response;
 
-            TournamentEntry entry = new(_payloadEntry.Count, _payloadEntry.DurationInSeconds, _user.Token);
+            TournamentEntry entry = new(_payloadEntry.Count, _payloadEntry.DurationInSeconds, _user.Username);
             _tournamentController.HandleTournamentEntry(entry, _payloadEntry.Name);
             response = new HttpResponse(StatusCode.Ok);
 

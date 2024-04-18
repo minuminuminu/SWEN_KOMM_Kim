@@ -10,13 +10,13 @@ namespace SWEN_KOMM_Kim.Models
     {
         public int Count { get; set; }
         public int Duration { get; set; }
-        public string AuthToken { get; set; }
+        public string Username { get; set; }
 
-        public TournamentEntry(int count, int duration, string authToken)
+        public TournamentEntry(int count, int duration, string username)
         {
             Count = count;
             Duration = duration;
-            AuthToken = authToken;
+            Username = username;
         }
     }
 }

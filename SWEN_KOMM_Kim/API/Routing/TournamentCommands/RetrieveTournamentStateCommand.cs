@@ -29,9 +29,7 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 
             try
             {
-                TournamentState tournamentState = _tournamentController.GetTournamentStateByAuthToken(_user.Token);
-                //List<string> test = new List<string> { "admin-sebToken", "kienboec-sebToken" };
-                //TournamentState tournamentState = new TournamentState(3, test, DateTime.Now);
+                TournamentState tournamentState = _tournamentController.GetTournamentStateByUsername(_user.Username);
                 var jsonPayload = JsonConvert.SerializeObject(tournamentState);
                 response = new HttpResponse(StatusCode.Ok, jsonPayload);
             }

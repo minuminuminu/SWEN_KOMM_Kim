@@ -14,11 +14,11 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
     {
         private readonly ConcurrentDictionary<string, Tournament> _tournaments = new ConcurrentDictionary<string, Tournament>();
 
-        private readonly string CreateHistoryTableCommand = @"CREATE TABLE IF NOT EXISTS history (id SERIAL PRIMARY KEY, count int, duration int, authToken varchar references users(authToken) ON UPDATE CASCADE)";
+        private readonly string CreateHistoryTableCommand = @"CREATE TABLE IF NOT EXISTS history (id SERIAL PRIMARY KEY, count int, duration int, username varchar references users(username) ON UPDATE CASCADE)";
 
-        private readonly string SelectAllEntriesByAuthTokenCommand = @"SELECT * FROM history WHERE authToken=@authToken";
+        private readonly string SelectAllEntriesByUsernameCommand = @"SELECT * FROM history WHERE username=@username";
 
-        private readonly string InsertHistoryEntryCommand = @"INSERT INTO history (count, duration, authToken) VALUES (@count, @duration, @authToken)";
+        private readonly string InsertHistoryEntryCommand = @"INSERT INTO history (count, duration, username) VALUES (@count, @duration, @username)";
 
         private readonly string _connectionString;
 
@@ -45,28 +45,28 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
             using var cmd = new NpgsqlCommand(InsertHistoryEntryCommand, connection);
             cmd.Parameters.AddWithValue("count", entry.Count);
             cmd.Parameters.AddWithValue("duration", entry.Duration);
-            cmd.Parameters.AddWithValue("authToken", entry.AuthToken);
+            cmd.Parameters.AddWithValue("username", entry.Username);
             var affectedRows = cmd.ExecuteNonQuery();
 
             return affectedRows > 0;
         }
 
-        public List<TournamentEntry> GetUserHistory(string authToken)
+        public List<TournamentEntry> GetUserHistory(string username)
         {
             List<TournamentEntry> entries = new List<TournamentEntry>();
 
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
-            using var cmd = new NpgsqlCommand(SelectAllEntriesByAuthTokenCommand, connection);
-            cmd.Parameters.AddWithValue("authToken", authToken);
+            using var cmd = new NpgsqlCommand(SelectAllEntriesByUsernameCommand, connection);
+            cmd.Parameters.AddWithValue("username", username);
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
                 var count = reader.GetInt32(reader.GetOrdinal("count"));
                 var duration = reader.GetInt32(reader.GetOrdinal("duration"));
-                TournamentEntry entry = new TournamentEntry(count, duration, authToken);
+                TournamentEntry entry = new TournamentEntry(count, duration, username);
 
                 entries.Add(entry);
             }
@@ -74,13 +74,13 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
             return entries;
         }
 
-        public bool IsUserInTournament(string authToken)
+        public bool IsUserInTournament(string username)
         {
             foreach (var tournament in _tournaments.Values)
             {
                 foreach (var entry in tournament.Entries)
                 {
-                    if (entry.AuthToken == authToken)
+                    if (entry.Username == username)
                     {
                         return true; 
                     }
@@ -90,7 +90,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
             return false; 
         }
 
-        public string? GetTournamentNameByAuthToken(string authToken)
+        public string? GetTournamentNameByUsername(string username)
         {
             foreach (var tournamentEntry in _tournaments)
             {
@@ -99,7 +99,7 @@ namespace SWEN_KOMM_Kim.DAL.DAOs
 
                 foreach (var entry in tournament.Entries)
                 {
-                    if (entry.AuthToken == authToken)
+                    if (entry.Username == username)
                     {
                         return tournamentName; 
                     }
