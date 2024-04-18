@@ -15,12 +15,12 @@ namespace SWEN_KOMM_Kim.API.Routing.StatsCommands
     internal class RetrieveUserStatsCommand : IRouteCommand
     {
         private readonly User _user;
-        private readonly IStatsManager _statsManager;
+        private readonly IStatsController _statsController;
 
-        public RetrieveUserStatsCommand(User user, IStatsManager statsManager)
+        public RetrieveUserStatsCommand(User user, IStatsController statsController)
         {
             _user = user;
-            _statsManager = statsManager;
+            _statsController = statsController;
         }
 
         public HttpResponse Execute()
@@ -29,7 +29,7 @@ namespace SWEN_KOMM_Kim.API.Routing.StatsCommands
 
             try
             {
-                var data = _statsManager.RetrieveUserStats(_user.Token);
+                var data = _statsController.RetrieveUserStats(_user.Token);
                 var jsonPayload = JsonConvert.SerializeObject(data);
                 response = new HttpResponse(StatusCode.Ok, jsonPayload);
             }

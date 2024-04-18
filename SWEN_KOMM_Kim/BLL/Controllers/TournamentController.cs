@@ -8,19 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWEN_KOMM_Kim.BLL.Managers
+namespace SWEN_KOMM_Kim.BLL.Controllers
 {
-    internal class TournamentManager : ITournamentManager
+    internal class TournamentController : ITournamentController
     {
         private readonly ITournamentDao _tournamentDao;
-        private readonly IStatsManager _statsManager;
+        private readonly IStatsController _statsController;
 
         private readonly Dictionary<string, Timer> tournamentTimers = new Dictionary<string, Timer>();
 
-        public TournamentManager(ITournamentDao tournamentDao, IStatsManager statsManager)
+        public TournamentController(ITournamentDao tournamentDao, IStatsController statsController)
         {
             _tournamentDao = tournamentDao;
-            _statsManager = statsManager;
+            _statsController = statsController;
         }
 
         public List<TournamentEntry> GetUserHistory(string authToken)
@@ -151,19 +151,19 @@ namespace SWEN_KOMM_Kim.BLL.Managers
 
             if(winners.Count == 1)
             {
-                _statsManager.IncreaseStats(2, winners.First().Count, winners.First().AuthToken);
+                _statsController.IncreaseStats(2, winners.First().Count, winners.First().AuthToken);
             }
             else
             {
                 foreach (var winner in winners)
                 {
-                    _statsManager.IncreaseStats(1, winner.Count, winner.AuthToken);
+                    _statsController.IncreaseStats(1, winner.Count, winner.AuthToken);
                 }
             }
 
             foreach (var participant in otherParticipants)
             {
-                _statsManager.DecreaseStats(participant.Count, participant.AuthToken);
+                _statsController.DecreaseStats(participant.Count, participant.AuthToken);
             }
 
             foreach (var entry in sortedEntries)

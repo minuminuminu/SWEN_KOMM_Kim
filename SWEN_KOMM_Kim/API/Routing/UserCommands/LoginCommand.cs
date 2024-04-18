@@ -13,13 +13,13 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 {
     internal class LoginCommand : IRouteCommand
     {
-        private readonly IUserManager _userManager;
+        private readonly IUserController _userController;
         private readonly Credentials _credentials;
 
-        public LoginCommand(IUserManager userManager, Credentials credentials)
+        public LoginCommand(IUserController userController, Credentials credentials)
         {
             _credentials = credentials;
-            _userManager = userManager;
+            _userController = userController;
         }
 
         public HttpResponse Execute()
@@ -29,7 +29,7 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 
             try
             {
-                user = _userManager.LoginUser(_credentials);
+                user = _userController.LoginUser(_credentials);
             }
             catch (UserNotFoundException)
             {

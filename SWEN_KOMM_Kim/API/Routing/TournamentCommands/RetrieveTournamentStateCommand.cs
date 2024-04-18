@@ -14,12 +14,12 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 {
     internal class RetrieveTournamentStateCommand : IRouteCommand
     {
-        private readonly ITournamentManager _tournamentManager;
+        private readonly ITournamentController _tournamentController;
         private readonly User _user;
 
-        public RetrieveTournamentStateCommand(ITournamentManager tournamentManager, User user)
+        public RetrieveTournamentStateCommand(ITournamentController tournamentController, User user)
         {
-            _tournamentManager = tournamentManager;
+            _tournamentController = tournamentController;
             _user = user;
         }
 
@@ -29,7 +29,7 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 
             try
             {
-                TournamentState tournamentState = _tournamentManager.GetTournamentStateByAuthToken(_user.Token);
+                TournamentState tournamentState = _tournamentController.GetTournamentStateByAuthToken(_user.Token);
                 //List<string> test = new List<string> { "admin-sebToken", "kienboec-sebToken" };
                 //TournamentState tournamentState = new TournamentState(3, test, DateTime.Now);
                 var jsonPayload = JsonConvert.SerializeObject(tournamentState);

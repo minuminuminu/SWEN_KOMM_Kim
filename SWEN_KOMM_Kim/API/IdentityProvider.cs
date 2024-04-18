@@ -11,11 +11,11 @@ namespace SWEN_KOMM_Kim.API
 {
     internal class IdentityProvider
     {
-        private readonly IUserManager _userManager;
+        private readonly IUserController _userController;
 
-        public IdentityProvider(IUserManager userManager)
+        public IdentityProvider(IUserController userController)
         {
-            _userManager = userManager;
+            _userController = userController;
         }
 
         public User? GetIdentityForRequest(HttpRequest request)
@@ -29,7 +29,7 @@ namespace SWEN_KOMM_Kim.API
                 {
                     try
                     {
-                        currentUser = _userManager.GetUserByAuthToken(authToken.Substring(prefix.Length));
+                        currentUser = _userController.GetUserByAuthToken(authToken.Substring(prefix.Length));
                     }
                     catch { }
                 }

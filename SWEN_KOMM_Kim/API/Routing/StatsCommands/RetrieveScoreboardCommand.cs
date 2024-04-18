@@ -14,12 +14,12 @@ namespace SWEN_KOMM_Kim.API.Routing.StatsCommands
 {
     internal class RetrieveScoreboardCommand : IRouteCommand
     {
-        private readonly IStatsManager _statsManager;
+        private readonly IStatsController _statsController;
         private readonly User _user;
 
-        public RetrieveScoreboardCommand(IStatsManager statsManager, User user)
+        public RetrieveScoreboardCommand(IStatsController statsController, User user)
         {
-            _statsManager = statsManager;
+            _statsController = statsController;
             _user = user;
         }
 
@@ -27,7 +27,7 @@ namespace SWEN_KOMM_Kim.API.Routing.StatsCommands
         {
             HttpResponse response;
 
-            List<UserStats> scoreboard = _statsManager.RetrieveScoreboard();
+            List<UserStats> scoreboard = _statsController.RetrieveScoreboard();
             var jsonPayload = JsonConvert.SerializeObject(scoreboard);
             response = new HttpResponse(StatusCode.Ok, jsonPayload);
 

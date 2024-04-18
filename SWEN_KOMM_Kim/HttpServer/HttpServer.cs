@@ -31,9 +31,11 @@ namespace SWEN_KOMM_Kim.HttpServer
 
             while (_listening)
             {
-                var client = _listener.AcceptTcpClient();
+                var client = _listener.AcceptTcpClient(); // bleibt hier stehen bis client conn. eintrifft
+                // in client wird ein TcpClient Objekt gespeichert, das die Verbindung zum Client repräsentiert
                 var clientHandler = new HttpClientHandler(client);
                 Task.Run(() => HandleClient(clientHandler));
+                // client wird an HandleClient übergeben, der in einem neuen Task ausgeführt wird
             }
         }
 

@@ -13,14 +13,14 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 {
     internal class UpdateUserCredentialsCommand : IRouteCommand
     {
-        private readonly IUserManager _userManager;
+        private readonly IUserController _userController;
         private readonly User _updatedCredentials;
         private readonly User _requestingUser;
         private readonly string _userToUpdate;
 
-        public UpdateUserCredentialsCommand(IUserManager userManager, User updatedCredentials, User requestingUser, string pathVar)
+        public UpdateUserCredentialsCommand(IUserController userController, User updatedCredentials, User requestingUser, string pathVar)
         {
-            _userManager = userManager;
+            _userController = userController;
             _updatedCredentials = updatedCredentials;
             _requestingUser = requestingUser;
             _userToUpdate = pathVar;
@@ -32,12 +32,12 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 
             try
             {
-                if(_requestingUser.Token != _userManager.GetUserByUsername(_userToUpdate).Token && _requestingUser.Token != "admin-sebToken")
+                if(_requestingUser.Token != _userController.GetUserByUsername(_userToUpdate).Token && _requestingUser.Token != "admin-sebToken")
                 {
                     throw new RouteNotAuthenticatedException();
                 }
 
-                _userManager.UpdateUserCredentials(_updatedCredentials, _userToUpdate);
+                _userController.UpdateUserCredentials(_updatedCredentials, _userToUpdate);
                 response = new HttpResponse(StatusCode.Ok);
             }
             catch (RouteNotAuthenticatedException)

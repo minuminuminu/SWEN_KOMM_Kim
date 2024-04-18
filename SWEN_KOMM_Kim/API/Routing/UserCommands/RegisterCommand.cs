@@ -13,14 +13,14 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 {
     internal class RegisterCommand : IRouteCommand
     {
-        IUserManager _userManager;
-        IStatsManager _statsManager;
+        IUserController _userController;
+        IStatsController _statsController;
         Credentials _credentials;
 
-        public RegisterCommand(IUserManager userManager, IStatsManager statsManager, Credentials credentials)
+        public RegisterCommand(IUserController userController, IStatsController statsController, Credentials credentials)
         {
-            _userManager = userManager;
-            _statsManager = statsManager;
+            _userController = userController;
+            _statsController = statsController;
             _credentials = credentials;
         }
 
@@ -32,8 +32,8 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
             {
                 var user = new User(_credentials.Username, _credentials.Password);
 
-                _userManager.RegisterUser(_credentials);
-                _statsManager.CreateUserStatsEntry(user.Token);
+                _userController.RegisterUser(_credentials);
+                _statsController.CreateUserStatsEntry(user.Token);
                 response = new HttpResponse(StatusCode.Created);
             }
             catch (DuplicateUserException)

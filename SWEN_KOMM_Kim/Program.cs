@@ -1,6 +1,6 @@
 ﻿using SWEN_KOMM_Kim.API;
 using SWEN_KOMM_Kim.BLL.Interfaces;
-using SWEN_KOMM_Kim.BLL.Managers;
+using SWEN_KOMM_Kim.BLL.Controllers;
 using SWEN_KOMM_Kim.DAL.DAOs;
 using SWEN_KOMM_Kim.DAL.Interfaces;
 using SWEN_KOMM_Kim.HttpServer;
@@ -18,11 +18,11 @@ namespace SWEN_KOMM_Kim
             IStatsDao statsDao = new StatsDao(connectionString);
             ITournamentDao tournamentDao = new TournamentDao(connectionString);
 
-            IUserManager userManager = new UserManager(userDao);
-            IStatsManager statsManager = new StatsManager(statsDao);
-            ITournamentManager tournamentManager = new TournamentManager(tournamentDao, statsManager);
+            IUserController userController = new UserController(userDao);
+            IStatsController statsController = new StatsController(statsDao);
+            ITournamentController tournamentController = new TournamentController(tournamentDao, statsController);
 
-            var router = new Router(userManager, statsManager, tournamentManager);
+            var router = new Router(userController, statsController, tournamentController);
             var server = new HttpServer.HttpServer(router, IPAddress.Any, 10001);
             Console.WriteLine("Server is running on port 10001.");
             server.Start();

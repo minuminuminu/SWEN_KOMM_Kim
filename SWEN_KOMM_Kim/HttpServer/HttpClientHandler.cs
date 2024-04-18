@@ -32,7 +32,10 @@ namespace SWEN_KOMM_Kim.HttpServer
             {
                 // "using" keyword -> immediately dispose and when going out of scope, leaving the socket stream open for sending the response
                 using var reader = new StreamReader(_client.GetStream(), leaveOpen: true);
+                // StreamReader wird initialisiert, um die Anfrage des Clients zu lesen
+                // leaveOpen, damit der Stream offen bleibt, um die Antwort zu senden
 
+                // alle variablen mal initialisieren
                 Request.HttpMethod method = Request.HttpMethod.Get;
                 string? path = null;
                 string? version = null;
@@ -42,6 +45,7 @@ namespace SWEN_KOMM_Kim.HttpServer
 
                 ParseState state = ParseState.Base;
                 string? line;
+                // initial state ist base
 
                 while (!string.IsNullOrWhiteSpace(line = reader.ReadLine()))
                 {

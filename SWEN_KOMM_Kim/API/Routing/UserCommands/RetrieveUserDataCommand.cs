@@ -14,13 +14,13 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 {
     internal class RetrieveUserDataCommand : IRouteCommand
     {
-        private readonly IUserManager _userManager;
+        private readonly IUserController _userController;
         private readonly string _requestedUsername;
         private readonly User _requestingUser;
 
-        public RetrieveUserDataCommand(IUserManager userManager, string requestedUsername, User requestingUser)
+        public RetrieveUserDataCommand(IUserController userController, string requestedUsername, User requestingUser)
         {
-            _userManager = userManager;
+            _userController = userController;
             _requestedUsername = requestedUsername;
             _requestingUser = requestingUser;
         }
@@ -31,14 +31,14 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 
             try
             {
-                var userToEdit = _userManager.GetUserByUsername(_requestedUsername);
+                var userToEdit = _userController.GetUserByUsername(_requestedUsername);
 
                 if (_requestingUser.Token != "admin-sebToken" && _requestingUser.Token != userToEdit.Token)
                 {
                     throw new UserNotAuthenticatedException();
                 }
 
-                var data = _userManager.GetUserData(userToEdit.Token);
+                var data = _userController.GetUserData(userToEdit.Token);
                 var jsonPayload = JsonConvert.SerializeObject(data);
                 response = new HttpResponse(StatusCode.Ok, jsonPayload);
             }

@@ -8,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWEN_KOMM_Kim.BLL.Managers
+namespace SWEN_KOMM_Kim.BLL.Controllers
 {
-    internal class StatsManager : IStatsManager
+    internal class StatsController : IStatsController
     {
         private readonly IStatsDao _statsDao;
 
-        public StatsManager(IStatsDao statsDao)
+        public StatsController(IStatsDao statsDao)
         {
             _statsDao = statsDao;
         }

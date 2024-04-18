@@ -9,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWEN_KOMM_Kim.BLL.Managers
+namespace SWEN_KOMM_Kim.BLL.Controllers
 {
-    internal class UserManager : IUserManager
+    internal class UserController : IUserController
     {
         private readonly IUserDao _userDao;
 
-        public UserManager(IUserDao userDao)
+        public UserController(IUserDao userDao)
         {
             _userDao = userDao;
         }

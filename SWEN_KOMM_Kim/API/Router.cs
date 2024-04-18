@@ -22,17 +22,17 @@ namespace SWEN_KOMM_Kim.API
         private readonly IdentityProvider _identityProvider;
         private readonly IdRouteParser _routeParser;
 
-        private readonly IUserManager _userManager;
-        private readonly IStatsManager _statsManager;
-        private readonly ITournamentManager _tournamentManager;
+        private readonly IUserController _userController;
+        private readonly IStatsController _statsController;
+        private readonly ITournamentController _tournamentController;
 
-        public Router(IUserManager userManager, IStatsManager statsManager, ITournamentManager tournamentManager)
+        public Router(IUserController userController, IStatsController statsController, ITournamentController tournamentController)
         {
-            _identityProvider = new IdentityProvider(userManager);
+            _identityProvider = new IdentityProvider(userController);
             _routeParser = new IdRouteParser();
-            _userManager = userManager;
-            _statsManager = statsManager;
-            _tournamentManager = tournamentManager;
+            _userController = userController;
+            _statsController = statsController;
+            _tournamentController = tournamentController;
         }
 
         public IRouteCommand? Resolve(HttpRequest request)
@@ -45,20 +45,20 @@ namespace SWEN_KOMM_Kim.API
             {
                 return request switch
                 {
-                    { Method: HttpMethod.Post, ResourcePath: "/users" } => new RegisterCommand(_userManager, _statsManager, Deserialize<Credentials>(request.Payload)),
-                    { Method: HttpMethod.Post, ResourcePath: "/sessions" } => new LoginCommand(_userManager, Deserialize<Credentials>(request.Payload)),
-                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "users") => new UpdateUserDataCommand(_userManager, parseId(path, "users"), GetIdentity(request), Deserialize<UserData>(request.Payload)),
-                    { Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path, "users") => new RetrieveUserDataCommand(_userManager, parseId(path, "users"), GetIdentity(request)),
+                    { Method: HttpMethod.Post, ResourcePath: "/users" } => new RegisterCommand(_userController, _statsController, Deserialize<Credentials>(request.Payload)),
+                    { Method: HttpMethod.Post, ResourcePath: "/sessions" } => new LoginCommand(_userController, Deserialize<Credentials>(request.Payload)),
+                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "users") => new UpdateUserDataCommand(_userController, parseId(path, "users"), GetIdentity(request), Deserialize<UserData>(request.Payload)),
+                    { Method: HttpMethod.Get, ResourcePath: var path } when isMatch(path, "users") => new RetrieveUserDataCommand(_userController, parseId(path, "users"), GetIdentity(request)),
 
-                    { Method: HttpMethod.Get, ResourcePath: "/stats" } => new RetrieveUserStatsCommand(GetIdentity(request), _statsManager),
-                    { Method: HttpMethod.Get, ResourcePath: "/score" } => new RetrieveScoreboardCommand(_statsManager, GetIdentity(request)),
+                    { Method: HttpMethod.Get, ResourcePath: "/stats" } => new RetrieveUserStatsCommand(GetIdentity(request), _statsController),
+                    { Method: HttpMethod.Get, ResourcePath: "/score" } => new RetrieveScoreboardCommand(_statsController, GetIdentity(request)),
 
-                    { Method: HttpMethod.Get, ResourcePath: "/history" } => new RetrieveHistoryCommand(_tournamentManager, GetIdentity(request)),
-                    { Method: HttpMethod.Get, ResourcePath: "/tournament" } => new RetrieveTournamentStateCommand(_tournamentManager, GetIdentity(request)),
-                    { Method: HttpMethod.Post, ResourcePath: "/history" } => new AddHistoryEntryCommand(_tournamentManager, GetIdentity(request), Deserialize<PayloadEntry>(request.Payload)),
+                    { Method: HttpMethod.Get, ResourcePath: "/history" } => new RetrieveHistoryCommand(_tournamentController, GetIdentity(request)),
+                    { Method: HttpMethod.Get, ResourcePath: "/tournament" } => new RetrieveTournamentStateCommand(_tournamentController, GetIdentity(request)),
+                    { Method: HttpMethod.Post, ResourcePath: "/history" } => new AddHistoryEntryCommand(_tournamentController, GetIdentity(request), Deserialize<PayloadEntry>(request.Payload)),
 
                     // unique feature
-                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "edit") => new UpdateUserCredentialsCommand(_userManager, Deserialize<User>(request.Payload), GetIdentity(request), parseId(path, "edit")),
+                    { Method: HttpMethod.Put, ResourcePath: var path } when isMatch(path, "edit") => new UpdateUserCredentialsCommand(_userController, Deserialize<User>(request.Payload), GetIdentity(request), parseId(path, "edit")),
 
                     _ => null
                 };

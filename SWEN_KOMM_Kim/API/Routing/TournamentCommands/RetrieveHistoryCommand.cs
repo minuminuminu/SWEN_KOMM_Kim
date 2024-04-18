@@ -14,12 +14,12 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 {
     internal class RetrieveHistoryCommand : IRouteCommand
     {
-        private readonly ITournamentManager _tournamentManager;
+        private readonly ITournamentController _tournamentController;
         private readonly User _user;
 
-        public RetrieveHistoryCommand(ITournamentManager tournamentManager, User user)
+        public RetrieveHistoryCommand(ITournamentController tournamentController, User user)
         {
-            _tournamentManager = tournamentManager;
+            _tournamentController = tournamentController;
             _user = user;
         }
 
@@ -29,7 +29,7 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 
             try
             {
-                List<TournamentEntry> entries = _tournamentManager.GetUserHistory(_user.Token);
+                List<TournamentEntry> entries = _tournamentController.GetUserHistory(_user.Token);
                 var jsonPayload = JsonConvert.SerializeObject(entries);
                 response = new HttpResponse(StatusCode.Ok, jsonPayload);
             }

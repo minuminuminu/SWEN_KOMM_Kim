@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SWEN_KOMM_Kim.BLL.Interfaces
 {
-    internal interface ITournamentManager
+    internal interface ITournamentController
     {
         List<TournamentEntry> GetUserHistory(string authToken);
         TournamentState GetTournamentStateByAuthToken(string authToken);

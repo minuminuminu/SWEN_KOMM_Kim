@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SWEN_KOMM_Kim.BLL.Interfaces
 {
-    internal interface IStatsManager
+    internal interface IStatsController
     {
         void CreateUserStatsEntry(string authToken);
         UserStats RetrieveUserStats(string authToken);

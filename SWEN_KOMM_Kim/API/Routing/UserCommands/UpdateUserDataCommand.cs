@@ -13,14 +13,14 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 {
     internal class UpdateUserDataCommand : IRouteCommand
     {
-        private readonly IUserManager _userManager;
+        private readonly IUserController _userController;
         private readonly string _requestedUsername;
         private readonly User _requestingUser;
         private readonly UserData _userData;
 
-        public UpdateUserDataCommand(IUserManager userManager, string requestedUsername, User requestingUser, UserData userData)
+        public UpdateUserDataCommand(IUserController userController, string requestedUsername, User requestingUser, UserData userData)
         {
-            _userManager = userManager;
+            _userController = userController;
             _requestedUsername = requestedUsername;
             _requestingUser = requestingUser;
             _userData = userData;
@@ -32,14 +32,14 @@ namespace SWEN_KOMM_Kim.API.Routing.UserCommands
 
             try
             {
-                var userToEdit = _userManager.GetUserByUsername(_requestedUsername);
+                var userToEdit = _userController.GetUserByUsername(_requestedUsername);
 
                 if (_requestingUser.Token != "admin-sebToken" && _requestingUser.Token != userToEdit.Token)
                 {
                     throw new UserNotAuthenticatedException();
                 }
 
-                _userManager.UpdateUserData(_userData, userToEdit.Token);
+                _userController.UpdateUserData(_userData, userToEdit.Token);
                 response = new HttpResponse(StatusCode.Ok);
             }
             catch (UserNotAuthenticatedException)

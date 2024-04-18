@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SWEN_KOMM_Kim.BLL.Interfaces
 {
-    internal interface IUserManager
+    internal interface IUserController
     {
         User LoginUser(Credentials credentials);
         void RegisterUser(Credentials credentials);

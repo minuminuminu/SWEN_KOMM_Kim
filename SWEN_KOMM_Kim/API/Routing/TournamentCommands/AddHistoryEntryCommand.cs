@@ -12,13 +12,13 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
 {
     internal class AddHistoryEntryCommand : IRouteCommand
     {
-        private readonly ITournamentManager _tournamentManager;
+        private readonly ITournamentController _tournamentController;
         private readonly User _user;
         private readonly PayloadEntry _payloadEntry;
 
-        public AddHistoryEntryCommand(ITournamentManager tournamentManager, User user, PayloadEntry payloadEntry)
+        public AddHistoryEntryCommand(ITournamentController tournamentController, User user, PayloadEntry payloadEntry)
         {
-            _tournamentManager = tournamentManager;
+            _tournamentController = tournamentController;
             _payloadEntry = payloadEntry;
             _user = user;
         }
@@ -28,7 +28,7 @@ namespace SWEN_KOMM_Kim.API.Routing.TournamentCommands
             HttpResponse response;
 
             TournamentEntry entry = new(_payloadEntry.Count, _payloadEntry.DurationInSeconds, _user.Token);
-            _tournamentManager.HandleTournamentEntry(entry, _payloadEntry.Name);
+            _tournamentController.HandleTournamentEntry(entry, _payloadEntry.Name);
             response = new HttpResponse(StatusCode.Ok);
 
             return response;
